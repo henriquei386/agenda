@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../helper/contact_helper.dart';
 
 class HomePage extends StatefulWidget {
@@ -86,17 +87,15 @@ class _HomePageState extends State<HomePage> {
         title: Text('Contatos'),
         centerTitle: true,
       ),
-      body: ListView.builder(
-        padding: EdgeInsets.all(10.0),
-        itemCount: contacts.length > 0 ? contacts.length : 1,
-        itemBuilder: (BuildContext context, int index) {
-          if (contacts.length > 0) {
-            return _contactCard(context, index);
-          } else {
-            return Container();
-          }
-        },
-      ),
+      body: contacts.length > 0
+          ? ListView.builder(
+              padding: EdgeInsets.all(10.0),
+              itemCount: contacts.length,
+              itemBuilder: (BuildContext context, int index) {
+                return _contactCard(context, index);
+              },
+            )
+          : Container(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: Icon(Icons.add),
