@@ -5,6 +5,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:agenda/helper/contact_helper.dart';
 import 'package:agenda/pages/contact_page.dart';
 
+enum OrderOptions { orderaz, orderza }
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -181,22 +183,53 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _orderList(OrderOptions result) {
+    switch (result) {
+      case OrderOptions.orderaz:
+        contacts.sort(
+            (a, b) => a.name!.toLowerCase().compareTo(b.name!.toLowerCase()));
+        break;
+      case OrderOptions.orderza:
+        contacts.sort(
+            (a, b) => b.name!.toLowerCase().compareTo(a.name!.toLowerCase()));
+        break;
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Contatos'),
         centerTitle: true,
+        actions: <Widget>[
+          PopupMenuButton<OrderOptions>(
+            onSelected: _orderList,
+            itemBuilder: (context) => <PopupMenuEntry<OrderOptions>>[
+              const PopupMenuItem<OrderOptions>(
+                child: Text(
+                  'Ordernar de A-Z',
+                ),
+                value: OrderOptions.orderaz,
+              ),
+              const PopupMenuItem<OrderOptions>(
+                child: Text(
+                  'Ordernar de Z-A',
+                ),
+                value: OrderOptions.orderza,
+              ),
+            ],
+          ),
+        ],
       ),
-      body: contacts.length > 0
-          ? ListView.builder(
-              padding: EdgeInsets.all(10.0),
-              itemCount: contacts.length,
-              itemBuilder: (BuildContext context, int index) {
-                return _contactCard(context, index);
-              },
-            )
-          : Container(),
+      body: ListView.builder(
+        padding: EdgeInsets.all(10.0),
+        itemCount: contacts.length,
+        itemBuilder: (BuildContext context, int index) {
+          return _contactCard(context, index);
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showContactPage();
