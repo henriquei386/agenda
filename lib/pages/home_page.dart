@@ -48,11 +48,81 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  // ShowOptions
+  void _showOptions(BuildContext context, int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return BottomSheet(
+            onClosing: () {},
+            builder: (context) {
+              return Container(
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(10.0),
+                      child: TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Ligar',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(10.0),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _showContactPage(contact: contacts[index]);
+                        },
+                        child: Text(
+                          'Editar',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(10.0),
+                      child: TextButton(
+                        onPressed: () {
+                          helper.deleteContact(contacts[index].id!);
+                          setState(() {
+                            contacts.removeAt(index);
+                            Navigator.pop(context);
+                          });
+                        },
+                        child: Text(
+                          'Excluir',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            });
+      },
+    );
+  }
+
   // Contatos
   Widget _contactCard(BuildContext context, int index) {
     return GestureDetector(
       onTap: () {
-        _showContactPage(contact: contacts[index]);
+        _showOptions(context, index);
       },
       child: Card(
         child: Padding(
