@@ -14,12 +14,13 @@ class ContactPage extends StatefulWidget {
 
 class _ContactPageState extends State<ContactPage> {
   Contact? _editedContact;
-  bool _userEdited = false;
+  bool? _userEdited = false;
 
   final TextEditingController? _nameController = TextEditingController();
   final TextEditingController? _emailController = TextEditingController();
   final TextEditingController? _phoneController = TextEditingController();
 
+  final FocusNode? _nameFocus = FocusNode();
   @override
   void initState() {
     super.initState();
@@ -62,6 +63,7 @@ class _ContactPageState extends State<ContactPage> {
             ),
             TextField(
               controller: _nameController,
+              focusNode: _nameFocus,
               decoration: InputDecoration(
                 labelText: 'Nome',
               ),
@@ -98,7 +100,14 @@ class _ContactPageState extends State<ContactPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          if (_editedContact!.name != null &&
+              _editedContact!.name!.isNotEmpty) {
+            Navigator.pop(context, _editedContact);
+          } else {
+            FocusScope.of(context).requestFocus(_nameFocus);
+          }
+        },
         child: Icon(Icons.save),
       ),
     );
