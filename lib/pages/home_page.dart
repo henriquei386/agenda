@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../helper/contact_helper.dart';
+import 'contact_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,7 +17,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _getAllContacts();
+  }
 
+  // GetAllContacts
+  _getAllContacts() {
     helper.getAllContacts().then((list) {
       setState(() {
         contacts = list as List<Contact>;
@@ -24,9 +29,32 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // Show ContactPage
+  void _showContactPage({Contact? contact}) async {
+    final recContact = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ContactPage(
+          contact: contact,
+        ),
+      ),
+    );
+    if (recContact != null) {
+      if (contact != null) {
+        await helper.updateContact(recContact);
+      } else {
+        await helper.saveContact(recContact);
+      }
+      _getAllContacts();
+    }
+  }
+
   // Contatos
   Widget _contactCard(BuildContext context, int index) {
     return GestureDetector(
+      onTap: () {
+        _showContactPage(contact: contacts[index]);
+      },
       child: Card(
         child: Padding(
           padding: EdgeInsets.all(10.0),
@@ -97,7 +125,9 @@ class _HomePageState extends State<HomePage> {
             )
           : Container(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          _showContactPage();
+        },
         child: Icon(Icons.add),
       ),
     );
