@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:agenda/helper/contact_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ContactPage extends StatefulWidget {
   late final Contact? contact;
@@ -66,6 +67,16 @@ class _ContactPageState extends State<ContactPage> {
     }
   }
 
+  Future getImage() async {
+    final pickedFile =
+        await ImagePicker.platform.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        _editedContact!.image = pickedFile.path;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -80,6 +91,9 @@ class _ContactPageState extends State<ContactPage> {
           child: Column(
             children: <Widget>[
               GestureDetector(
+                onTap: () {
+                  getImage();
+                },
                 child: Container(
                   width: 140.0,
                   height: 140.0,
