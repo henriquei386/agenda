@@ -88,9 +88,13 @@ class _HomePageState extends State<HomePage> {
       ),
       body: ListView.builder(
         padding: EdgeInsets.all(10.0),
-        itemCount: contacts.length,
+        itemCount: contacts.length > 0 ? contacts.length : 1,
         itemBuilder: (BuildContext context, int index) {
-          return _contactCard(context, index);
+          if (contacts.length > 0) {
+            return _contactCard(context, index);
+          } else {
+            return Container();
+          }
         },
       ),
       floatingActionButton: FloatingActionButton(
